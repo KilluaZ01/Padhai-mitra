@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <title>Student Dashboard - Padhal Mitra</title>
+  </head>
+
+  <body class="min-h-screen flex flex-col bg-gray-50">
+    <!-- Header -->
+    <header class="w-full pt-4">
+      <div
+        class="max-w-6xl mx-auto flex items-center px-6 sm:px-8 lg:px-12 gap-6"
+      >
+        <img
+          src="{% static 'images/logo.png' %}"
+          alt="Padhal Mitra logo"
+          class="w-32 h-32 object-contain mx-auto"
+        />
+      </div>
+    </header>
+
+    <!-- Title -->
+    <div class="flex flex-col pl-6 sm:pl-8 md:pl-16 lg:pl-48">
+      <h1 class="text-3xl text-gray-800 font-bold text-center">
+        Available Notes
+      </h1>
+    </div>
+
+    <!-- Back Button -->
+    <section class="w-full px-6 py-4">
+      <div class="flex items-center gap-2 pl-4 md:pl-16 lg:pl-48 mb-8">
+        <a
+          href="{% url 'dashboard_student' %}"
+          class="text-blue-600 hover:underline font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          aria-label="Back to Dashboard"
+        >
+          <i class="fas fa-arrow-left mr-1"></i> Back
+        </a>
+      </div>
+
+      <!-- Notes Grid -->
+      <ul
+        class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        role="list"
+      >
+        {% for note in notes %}
+        <li
+          class="note-card bg-white p-6 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition duration-300"
+          tabindex="0"
+          role="listitem"
+          aria-label="Note: {{ note.title }}"
+        >
+          <div class="text-center">
+            <p class="text-xs text-gray-500 note-date">{{ note.date }}</p>
+            <p class="text-sm text-gray-600 py-2 font-medium note-subject">
+              {{ note.subject }}
+            </p>
+            <h3 class="text-lg font-semibold text-gray-800 mt-4 note-title">
+              {{ note.title }}
+            </h3>
+          </div>
+        </li>
+        {% empty %}
+        <div class="text-gray-600 text-center col-span-3" aria-live="polite">
+          <p>No notes available at the moment.</p>
+        </div>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const synth = window.speechSynthesis;
+        let voices = [];
+
+        function loadVoices() {
+          voices = synth.getVoices();
+        }
+
+        // Load voices and wait if needed
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+          speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        function speak(text) {
+          if (!text || synth.speaking) {
+            synth.cancel();
+            return;
+          }
+
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = "en-US";
+
+          // Try to find a female voice
+          const femaleVoice = voices.find(
+            (voice) =>
+              voice.name.includes("Female") ||
+              voice.name.includes("Google US English") ||
+              voice.name.includes("Samantha") ||
+              voice.name.includes("Microsoft Zira")
+          );
+
+          if (femaleVoice) {
+            utterance.voice = femaleVoice;
+          }
+
+          synth.speak(utterance);
+        }
+
+        const noteCards = document.querySelectorAll(".note-card");
+
+        noteCards.forEach((card) => {
+          const date = card.querySelector(".note-date")?.textContent.trim();
+          const subject = card
+            .querySelector(".note-subject")
+            ?.textContent.trim();
+          const title = card.querySelector(".note-title")?.textContent.trim();
+          const textToSpeak = `Date: ${date}, Subject: ${subject}, Title: ${title}`;
+
+          // Hover events
+          card.addEventListener("mouseenter", () => {
+            if (textToSpeak) {
+              speak(textToSpeak);
+            }
+          });
+
+          card.addEventListener("mouseleave", () => {
+            synth.cancel();
+          });
+
+          // Focus events for keyboard navigation
+          card.addEventListener("focus", () => {
+            if (textToSpeak) {
+              speak(textToSpeak);
+            }
+          });
+
+          card.addEventListener("blur", () => {
+            synth.cancel();
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

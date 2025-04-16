@@ -19,11 +19,11 @@ def register_view(request):
             messages.error(request, "Email already exists.")
             return redirect('login')
 
-        user = User(name=name, email=email, user_type='teacher')
+        user = User(name=name, email=email, user_type=user_type)
         user.set_password(password)
         user.save()
         login(request, user)
-        return redirect('login')
+        return redirect('dashboard')  # Redirect to dashboard after registration
 
     return render(request, 'register.html')
 
@@ -34,10 +34,10 @@ def login_student_view(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('Homepage')
+            return redirect('dashboard')  # You can change this to a student dashboard if needed
         else:
             messages.error(request, "Invalid credentials.")
-            return redirect('login')
+            return redirect('login_student')
 
     return render(request, 'login_student.html')
 
@@ -48,17 +48,34 @@ def login_view(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('login')
+            return redirect('dashboard')  # This works now
         else:
             messages.error(request, "Invalid credentials.")
-            return redirect('dashboard')
+            return redirect('login')
 
     return render(request, 'login.html')
 
 
-def dashboard_view(request):
-    return render(request, 'teacher_dashboard.html', {'user': request.user})
+def notes_view_student(request):
+    notes = [
+        {'date': '04 Apr 2025', 'subject': 'Science', 'title': 'Vertebrates & Invertebrates'},
+        {'date': '04 Apr 2025', 'subject': 'Social', 'title': 'Raja Hatyakanda'},
+        {'date': '04 Apr 2025', 'subject': 'English', 'title': 'Pronouns'},
+    ]
+    return render(request, 'student_notes.html', {'notes': notes})
 
+def dashboard_view_student(request):
+    return render(request, 'student_dashboard.html')
+
+def make_notes_view_student(request):
+    return render(request, 'student_make_notes.html')
+
+def ask_view_student(request):
+    return render(request, 'student_ask.html')
+
+@login_required
+def dashboard_view(request):
+    return render(request, 'teacher_dashboard.html', {'User': request.user})
 
 def logout_view(request):
     logout(request)
