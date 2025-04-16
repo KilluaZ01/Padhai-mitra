@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-6c0^26e)pwr$d81%amuj5qi9z8u1)divcv#1ea1y89o8saq10i
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = 'sathi.User'
 
 # Application definition
 
