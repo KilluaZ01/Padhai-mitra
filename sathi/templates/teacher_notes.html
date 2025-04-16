@@ -1,0 +1,239 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body class="bg-gray-100">
+    <div class="flex h-screen">
+      <!-- Sidebar -->
+        <div
+          class="w-72 md:w-80 bg-white shadow-md flex flex-col justify-between"
+        >
+          <div>
+            <div class="p-4 flex justify-center">
+              <img src="{% static 'images/logo.png' %}" alt="logo" class="w-28" />
+            </div>
+            <ul class="bg-white rounded-xl divide-gray-200 max-w-sm mx-auto">
+              <li
+                class="group py-4 px-6 hover:bg-gray-100 transition-all duration-300 flex items-center gap-4 rounded-t-xl"
+              >
+                <i
+                  class="fas fa-tachometer-alt text-gray-500 text-lg group-hover:text-blue-900 transition-all duration-300"
+                ></i>
+                <a
+                  href="{% url 'dashboard'%}"
+                  class="text-gray-800 font-medium group-hover:text-blue-900 transition-all duration-300"
+                >
+                  Dashboard
+                </a>
+              </li>
+              <li
+                class="group py-4 px-6 hover:bg-gray-100 transition-all duration-300 flex items-center gap-4"
+              >
+                <i
+                  class="fas fa-user-graduate text-gray-500 text-lg group-hover:text-blue-900 transition-all duration-300"
+                ></i>
+                <a
+                  href="{% url 'teacher_student'%}"
+                  class="text-gray-800 font-medium group-hover:text-blue-900 transition-all duration-300"
+                >
+                  Students Detail
+                </a>
+              </li>
+              <li
+                class="group py-4 px-6 hover:bg-gray-100 transition-all duration-300 flex items-center gap-4 rounded-b-xl"
+              >
+                <i
+                  class="fas fa-paper-plane text-gray-500 text-lg group-hover:text-blue-900 transition-all duration-300"
+                ></i>
+                <a
+                  href="{% url 'teacher_notes'%}"
+                  class="text-gray-800 font-medium group-hover:text-blue-900 transition-all duration-300"
+                >
+                  Send Notes
+                </a>
+              </li>
+              <li
+                class="group py-4 px-6 hover:bg-gray-100 transition-all duration-300 flex items-center gap-4 rounded-b-xl"
+              >
+                <i
+                  class="fas fa-sticky-note text-gray-500 text-lg group-hover:text-blue-900 transition-all duration-300"
+                ></i>
+                <a
+                  href="#"
+                  class="text-gray-800 font-medium group-hover:text-blue-900 transition-all duration-300"
+                >
+                  Questions Asked
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="p-4">
+            <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+              >
+                Log Out
+              </button>
+            </form>
+          </div>
+        </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 p-6 overflow-y-auto">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold">Note Detail</h2>
+          <div class="w-12 h-12 rounded-full overflow-hidden border-4 border-blue-400 shadow-md">
+            <img src="https://via.placeholder.com/150" alt="Profile" class="w-full h-full object-cover"/>
+          </div>
+        </div>
+    
+    
+      
+    <!-- Search and filter bar -->
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <!-- Left section: Search bar and filter icon -->
+      <div class="flex items-center gap-3 flex-grow">
+        <!-- Search input -->
+        <input 
+          type="text" 
+          placeholder="Search notes..." 
+          class="w-full md:w-80 p-3 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+    
+        <!-- Filter icon -->
+        <div class="bg-white p-3 rounded-md shadow-sm cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+        </div>
+      </div>
+    
+      <!-- Right section: Add Notes button -->
+      <div class="flex-shrink-0">
+        <button class="bg-blue-900 text-white px-4 py-2 rounded-md flex items-center hover:bg-blue-800 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Add Notes
+        </button>
+      </div>
+    </div>
+    
+    
+        <!-- Notes Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+          
+        <!-- Note Card -->
+        <div class="bg-[#fefefe] p-6 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
+          <div class="flex flex-col h-full justify-between">
+            <div class="mb-4 text-center">
+              <p class="text-xs text-gray-500">04 Apr 2025</p>
+              <p class="text-sm text-gray-600 py-2 font-medium">English</p>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 text-center mt-6">Pronouns</h3>
+          </div>
+        </div>
+    
+           <!-- Note Card -->
+           <div class="bg-[#fefefe] p-6 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
+            <div class="flex flex-col h-full justify-between">
+              <div class="mb-4 text-center">
+                <p class="text-xs text-gray-500">04 Apr 2025</p>
+                <p class="text-sm text-gray-600 py-2 font-medium">English</p>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800 text-center mt-6">Pronouns</h3>
+            </div>
+          </div>
+    
+             <!-- Note Card -->
+        <div class="bg-[#fefefe] p-6 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
+          <div class="flex flex-col h-full justify-between">
+            <div class="mb-4 text-center">
+              <p class="text-xs text-gray-500">04 Apr 2025</p>
+              <p class="text-sm text-gray-600 py-2 font-medium">English</p>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 text-center mt-6">Pronouns</h3>
+          </div>
+        </div>
+    
+           <!-- Note Card -->
+           <div class="bg-[#fefefe] p-6 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
+            <div class="flex flex-col h-full justify-between">
+              <div class="mb-4 text-center">
+                <p class="text-xs text-gray-500">04 Apr 2025</p>
+                <p class="text-sm text-gray-600 py-2 font-medium">English</p>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800 text-center mt-6">Pronouns</h3>
+            </div>
+          </div>
+    
+             <!-- Note Card -->
+        <div class="bg-[#fefefe] p-6 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
+          <div class="flex flex-col h-full justify-between">
+            <div class="mb-4 text-center">
+              <p class="text-xs text-gray-500">04 Apr 2025</p>
+              <p class="text-sm text-gray-600 py-2 font-medium">English</p>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 text-center mt-6">Pronouns</h3>
+          </div>
+        </div>
+           <!-- Note Card -->
+           <div class="bg-[#fefefe] p-6 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
+            <div class="flex flex-col h-full justify-between">
+              <div class="mb-4 text-center">
+                <p class="text-xs text-gray-500">04 Apr 2025</p>
+                <p class="text-sm text-gray-600 py-2 font-medium">English</p>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800 text-center mt-6">Pronouns</h3>
+            </div>
+          </div>
+    
+             <!-- Note Card -->
+        <div class="bg-[#fefefe] p-6 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
+          <div class="flex flex-col h-full justify-between">
+            <div class="mb-4 text-center">
+              <p class="text-xs text-gray-500">04 Apr 2025</p>
+              <p class="text-sm text-gray-600 py-2 font-medium">English</p>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 text-center mt-6">Pronouns</h3>
+          </div>
+        </div>
+    
+           <!-- Note Card -->
+           <div class="bg-[#fefefe] p-6 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
+            <div class="flex flex-col h-full justify-between">
+              <div class="mb-4 text-center">
+                <p class="text-xs text-gray-500">04 Apr 2025</p>
+                <p class="text-sm text-gray-600 py-2 font-medium">English</p>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800 text-center mt-6">Pronouns</h3>
+            </div>
+          </div>
+    
+        </div>
+    </div>
+  </body>
+</html>

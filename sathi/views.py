@@ -77,6 +77,12 @@ def ask_view_student(request):
 def dashboard_view(request):
     return render(request, 'teacher_dashboard.html', {'User': request.user})
 
+def teacher_student_add_view(request):
+    return render(request, 'teacher_add.html')
+
+def teacher_notes(request):
+    return render(request, 'teacher_notes.html')
+
 def logout_view(request):
     logout(request)
     return redirect('login')

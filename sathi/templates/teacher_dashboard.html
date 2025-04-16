@@ -22,40 +22,6 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   </head>
   <body class="bg-gray-100">
-    <script>
-      const synth = window.speechSynthesis;
-
-      function speak(text) {
-        if (synth.speaking) {
-          synth.cancel(); // Stop current speech
-        }
-        const utter = new SpeechSynthesisUtterance(text);
-        synth.speak(utter);
-      }
-
-      function addSpeakOnHover(selector) {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach((el) => {
-          el.addEventListener("mouseenter", () => {
-            const text =
-              el.innerText || el.getAttribute("aria-label") || el.title;
-            if (text?.trim()) {
-              speak(text.trim());
-            }
-          });
-
-          el.addEventListener("mouseleave", () => {
-            synth.cancel(); // Stop speaking when mouse leaves
-          });
-        });
-      }
-
-      // Once the page loads
-      window.addEventListener("DOMContentLoaded", () => {
-        // Target all buttons, links, and sidebar list items
-        addSpeakOnHover("button, a, li, .note-card");
-      });
-    </script>
     <div class="flex h-screen">
       <!-- Sidebar -->
       <div
@@ -73,7 +39,7 @@
                 class="fas fa-tachometer-alt text-gray-500 text-lg group-hover:text-blue-900 transition-all duration-300"
               ></i>
               <a
-                href="#"
+                href="{% url 'dashboard' %}"
                 class="text-gray-800 font-medium group-hover:text-blue-900 transition-all duration-300"
               >
                 Dashboard
@@ -86,7 +52,7 @@
                 class="fas fa-user-graduate text-gray-500 text-lg group-hover:text-blue-900 transition-all duration-300"
               ></i>
               <a
-                href="#"
+                href="{% url 'teacher_student' %}"
                 class="text-gray-800 font-medium group-hover:text-blue-900 transition-all duration-300"
               >
                 Students Detail
@@ -174,70 +140,101 @@
 
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <!-- Blue Card (Original, Unchanged) -->
+          <!-- Blue Card -->
           <div class="bg-blue-100 px-8 py-6 rounded-xl shadow-sm">
-            <div class="bg-blue-300 p-3 rounded-lg w-10 h-10 mb-2">
+            <div class="bg-blue-300 w-10 h-10 mb-2 rounded-lg flex items-center justify-center">
               <i class="fas fa-user-graduate text-blue-600 text-lg"></i>
             </div>
             <p class="text-gray-800 text-sm font-medium">Students Enrolled</p>
             <p class="text-gray-800 text-3xl mt-3 font-bold">12</p>
           </div>
-
-          <!-- Red Card (Updated) -->
+        
+          <!-- Red Card -->
           <div class="bg-red-100 px-8 py-6 rounded-xl shadow-sm">
-            <div class="bg-red-300 p-3 rounded-lg w-10 h-10 mb-2">
+            <div class="bg-red-300 w-10 h-10 mb-2 rounded-lg flex items-center justify-center">
               <i class="fas fa-file-alt text-red-600 text-lg"></i>
             </div>
             <p class="text-gray-800 text-sm font-medium">Available Notes</p>
             <p class="text-gray-800 text-3xl mt-3 font-bold">2</p>
           </div>
-
-          <!-- Green Card (Updated) -->
+        
+          <!-- Green Card -->
           <div class="bg-green-100 px-8 py-6 rounded-xl shadow-sm">
-            <div class="bg-green-300 p-3 rounded-lg w-10 h-10 mb-2">
+            <div class="bg-green-300 w-10 h-10 mb-2 rounded-lg flex items-center justify-center">
               <i class="fas fa-book text-green-600 text-lg"></i>
             </div>
             <p class="text-gray-800 text-sm font-medium">Total Subjects</p>
             <p class="text-gray-800 text-3xl mt-3 font-bold">9</p>
           </div>
         </div>
+        
 
         <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
-          <!-- Left Panel -->
+          <!-- Left Panel (Placeholder) -->
           <div class="md:col-span-3 bg-white rounded-lg shadow-sm h-96"></div>
-
+        
           <!-- Recent Notes -->
           <div class="md:col-span-2">
             <h2 class="font-bold text-lg mb-4">Recent Notes</h2>
             <div class="space-y-3">
-              {% for note in recent_notes %}
-              <div
-                class="bg-white rounded-lg shadow-md flex overflow-hidden transition transform hover:scale-[1.01] hover:shadow-lg cursor-pointer"
-              >
-                <div
-                  class="bg-white p-3 w-24 flex flex-col justify-center text-center"
-                >
-                  <div
-                    class="text-{{ note.subject_color }}-700 text-sm font-semibold"
-                  >
-                    {{ note.subject }}
-                  </div>
-                  <div class="text-gray-400 text-xs">{{ note.date }}</div>
+              <!-- Loop of Note Cards -->
+              <div class="bg-white rounded-lg shadow-md flex overflow-hidden transition transform hover:scale-[1.01] hover:shadow-lg cursor-pointer">
+                <div class="bg-white p-3 w-24 flex flex-col justify-center text-center">
+                  <div class="text-blue-700 text-sm font-semibold">Science</div>
+                  <div class="text-gray-400 text-xs">04 Apr 2025</div>
                 </div>
-                <div
-                  class="flex-1 flex justify-between items-center px-4 border-l border-gray-100"
-                >
-                  <span class="text-gray-800 text-sm font-medium"
-                    >{{ note.title }}</span
-                  >
+                <div class="flex-1 flex justify-between items-center px-4 border-l border-gray-100">
+                  <span class="text-gray-800 text-sm font-medium">Vertebrates & Invertebrates</span>
+                  <i class="fas fa-chevron-right text-gray-400 group-hover:text-blue-600"></i>
+                </div>
+              </div>
+        
+              <!-- Repeat for other cards -->
+              <div class="bg-white rounded-lg shadow-md flex overflow-hidden transition transform hover:scale-[1.01] hover:shadow-lg cursor-pointer">
+                <div class="bg-white p-3 w-24 flex flex-col justify-center text-center">
+                  <div class="text-green-700 text-sm font-semibold">Social</div>
+                  <div class="text-gray-400 text-xs">04 Apr 2025</div>
+                </div>
+                <div class="flex-1 flex justify-between items-center px-4 border-l border-gray-100">
+                  <span class="text-gray-800 text-sm font-medium">Cultural Heritage</span>
                   <i class="fas fa-chevron-right text-gray-400"></i>
                 </div>
               </div>
-              {% endfor %}
+        
+              <div class="bg-white rounded-lg shadow-md flex overflow-hidden transition transform hover:scale-[1.01] hover:shadow-lg cursor-pointer">
+                <div class="bg-white p-3 w-24 flex flex-col justify-center text-center">
+                  <div class="text-pink-700 text-sm font-semibold">English</div>
+                  <div class="text-gray-400 text-xs">04 Apr 2025</div>
+                </div>
+                <div class="flex-1 flex justify-between items-center px-4 border-l border-gray-100">
+                  <span class="text-gray-800 text-sm font-medium">Verbs & Nouns</span>
+                  <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+              </div>
+        
+              <div class="bg-white rounded-lg shadow-xl flex overflow-hidden transition transform hover:scale-[1.01] hover:shadow-lg cursor-pointer">
+                <div class="bg-white p-3 w-24 flex flex-col justify-center text-center">
+                  <div class="text-blue-700 text-sm font-semibold">Science</div>
+                  <div class="text-gray-400 text-xs">04 Apr 2025</div>
+                </div>
+                <div class="flex-1 flex justify-between items-center px-4 border-l border-gray-100">
+                  <span class="text-gray-800 text-sm font-medium">Vertebrates Types</span>
+                  <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+              </div>
+        
+              <div class="bg-white rounded-lg shadow-md flex overflow-hidden transition transform hover:scale-[1.01] hover:shadow-lg cursor-pointer">
+                <div class="bg-white p-3 w-24 flex flex-col justify-center text-center">
+                  <div class="text-purple-700 text-sm font-semibold">Nepali</div>
+                  <div class="text-gray-400 text-xs">04 Apr 2025</div>
+                </div>
+                <div class="flex-1 flex justify-between items-center px-4 border-l border-gray-100">
+                  <span class="text-gray-800 text-sm font-medium">Byakaran Karan</span>
+                  <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
   </body>
-</html>
+  </html>

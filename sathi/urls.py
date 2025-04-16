@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import (
     landing, register_view, login_view,
-    logout_view, login_student_view, ask_view_student, dashboard_view, make_notes_view_student, dashboard_view_student, notes_view_student
+    logout_view, login_student_view, teacher_student_add_view, teacher_notes, ask_view_student, dashboard_view, make_notes_view_student, dashboard_view_student, notes_view_student
 )
 
 urlpatterns = [
@@ -18,7 +18,8 @@ urlpatterns = [
     path('student_notes/', notes_view_student, name='student_notes'),
     path('make_notes/', make_notes_view_student, name='make_notes'),
     path('student_ask/', ask_view_student, name='student_ask'),
-
+    path('teacher_student/', teacher_student_add_view, name = 'teacher_student'),
+    path('teacher_notes/', teacher_notes, name = 'teacher_notes'),
 ]
 
 if settings.DEBUG:
