@@ -1,31 +1,149 @@
-<!-- templates/register.html -->
+{% load static %}
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Register</title>
-</head>
-<body>
-    <h2>Register</h2>
-    <form method="POST" action="">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body
+    class="min-h-screen flex items-center justify-center bg-blue-900 py-12 px-4 sm:px-6 lg:px-8"
+  >
+    <div class="max-w-md w-full space-y-4 flex flex-col items-center">
+      <!-- Logo -->
+      <div class="flex flex-col items-center justify-center">
+        <div class="bg-transparent p-2 rounded-lg">
+          <img
+            src="{% static 'images/logotime.png' %}"
+            alt="Logo"
+            class="h-[13rem] w-[13rem] object-contain"
+          />
+        </div>
+      </div>
+
+      <!-- Form Header -->
+      <h2 class="text-center text-2xl font-extrabold text-white">
+        Create an Account
+      </h2>
+
+      <!-- Signup Form -->
+      <form
+        method="POST"
+        action="{% url 'signup' %}"
+        class="max-w-md mx-auto space-y-2 w-full"
+      >
         {% csrf_token %}
-        <label>Name:</label><br>
-        <input type="text" name="name" required><br><br>
 
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
+        <!-- Name -->
+        <div>
+          <label for="name" class="block mb-2 text-sm font-medium text-white"
+            >Your Name</label
+          >
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+            >
+              <i class="fas fa-user text-blue-800"></i>
+            </div>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              required
+              placeholder="John Doe"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+            />
+          </div>
+        </div>
 
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br><br>
+        <!-- Email -->
+        <div>
+          <label for="email" class="block mb-2 text-sm font-medium text-white"
+            >Your Email</label
+          >
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+            >
+              <i class="fas fa-envelope text-blue-800"></i>
+            </div>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              required
+              placeholder="name@example.com"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+            />
+          </div>
+        </div>
 
-        <label>User Type:</label><br>
-        <select name="user_type" required>
-            <option value="teacher">Teacher</option>
-            <option value="student">Student</option>
-        </select><br><br>
+        <!-- Password -->
+        <div>
+          <label
+            for="password"
+            class="block mb-2 text-sm font-medium text-white"
+            >Password</label
+          >
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+            >
+              <i class="fas fa-lock text-blue-800"></i>
+            </div>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              required
+              placeholder="••••••••"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+            />
+          </div>
+        </div>
 
-        <button type="submit">Register</button>
-    </form>
+        <!-- Confirm Password -->
+        <div>
+          <label
+            for="confirm_password"
+            class="block mb-2 text-sm font-medium text-white"
+            >Confirm Password</label
+          >
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+            >
+              <i class="fas fa-lock text-blue-800"></i>
+            </div>
+            <input
+              type="password"
+              name="confirm_password"
+              id="confirm_password"
+              required
+              placeholder="••••••••"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+            />
+          </div>
+        </div>
 
-    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
-</body>
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="w-full bg-yellow-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Register
+        </button>
+      </form>
+    </div>
+  </body>
 </html>

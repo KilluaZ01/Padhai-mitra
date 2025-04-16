@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Teacher Sign In</title>
+    <title>Sign In</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome CDN -->
     <link
@@ -18,10 +19,10 @@
   <body
     class="min-h-screen flex items-center justify-center bg-blue-900 py-12 px-4 sm:px-6 lg:px-8"
   >
-    <div class="max-w-md w-full space-y-6 flex flex-col items-center">
+    <div class="max-w-md w-full space-y-2 flex flex-col items-center">
       <!-- Logo -->
-      <div class="flex flex-col items-center">
-        <div class="rounded-lg">
+      <div class="flex flex-col items-center justify-center">
+        <div class="bg-transparent rounded-lg">
           <img
             src="{% static 'images/logotime.png' %}"
             alt="Logo"
@@ -31,10 +32,16 @@
       </div>
 
       <!-- Form Header -->
-      <h2 class="text-center text-2xl font-bold text-white">Welcome Back</h2>
+      <h2 class="text-center text-2xl font-extrabold text-white">
+        Welcome Back
+      </h2>
 
       <!-- Sign In Form -->
-      <form method="POST" action="{% url 'login' %}" class="space-y-4 w-full">
+      <form
+        method="POST"
+        action="{% url 'login' %}"
+        class="max-w-md mx-auto space-y-2 w-full"
+      >
         {% csrf_token %}
 
         <!-- Email -->
@@ -43,7 +50,9 @@
             Your Email
           </label>
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+            >
               <i class="fas fa-envelope text-blue-800"></i>
             </div>
             <input
@@ -66,7 +75,9 @@
             Password
           </label>
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+            >
               <i class="fas fa-lock text-blue-800"></i>
             </div>
             <input
@@ -88,18 +99,15 @@
           Login
         </button>
 
-        <!-- Optional: Sign Up link -->
+        <!-- Optional Signup Link -->
+        <!-- 
         <div class="mt-4 text-end">
           <span class="text-sm text-white">
-            Don't have an account?
-            <a
-              href="{% url 'signup' %}"
-              class="underline text-yellow-400 hover:text-yellow-300"
-            >
-              Sign Up
-            </a>
+            Don’t have an account? 
+            <a href="{% url 'signup' %}" class="text-white underline">Sign Up</a>
           </span>
-        </div>
+        </div> 
+        -->
       </form>
     </div>
   </body>
