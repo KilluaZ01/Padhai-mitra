@@ -37,15 +37,26 @@ def extract_filenames(folder_path="teacher"):
 
 def makemp3():
     folder_path = "teacher"
+    output_folder = "mp3"
     file_count, file_names = extract_filenames(folder_path)
+    
+    # Create the output folder if it doesn't exist
+    os.makedirs(output_folder, exist_ok=True)
     
     for name in file_names:
         file_path = os.path.join(folder_path, name)
+        mp3_filename = os.path.join(output_folder, f"{name}.mp3")
+        print(mp3_filename)
+        
+        # Check if the MP3 file already exists
+        if os.path.exists(mp3_filename):
+            print(f"MP3 already exists: {mp3_filename}")
+            continue
+        
         print(f"Processing: {file_path}")
         text = extract_text_from_pdf(pdf_path=file_path)
         
         if text.strip():
-            mp3_filename = file_path.replace(".pdf", ".mp3")
             mp3(text=text, filename=mp3_filename)
             print(f"Saved: {mp3_filename}")
         else:
