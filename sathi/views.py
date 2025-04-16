@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import User
 from django.contrib import messages
 
-def Homepage(request):
+def landing(request):
     return render(request, 'index.html')
 
 def register_view(request):
@@ -17,13 +17,13 @@ def register_view(request):
 
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already exists.")
-            return redirect('Homepage')
+            return redirect('login')
 
-        user = User(name=name, email=email, user_type=user_type)
+        user = User(name=name, email=email, user_type='teacher')
         user.set_password(password)
         user.save()
         login(request, user)
-        return redirect('Homepage')
+        return redirect('login')
 
     return render(request, 'register.html')
 
@@ -48,17 +48,16 @@ def login_view(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('Homepage')
+            return redirect('login')
         else:
             messages.error(request, "Invalid credentials.")
-            return redirect('login')
+            return redirect('dashboard')
 
     return render(request, 'login.html')
 
 
-@login_required
 def dashboard_view(request):
-    return render(request, 'index.html', {'user': request.user})
+    return render(request, 'teacher_dashboard.html', {'user': request.user})
 
 
 def logout_view(request):
