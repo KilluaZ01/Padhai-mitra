@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import User
 from django.contrib import messages
 
-<<<<<<< HEAD
+
 def test(request):
     return render(request,"test.html")
 
@@ -18,19 +18,30 @@ from .functions.Voicecommand import listen_and_respond
 
 from django.urls import reverse
 
-
 @csrf_exempt
 def upload_audio(request):
     if request.method == 'POST' and request.FILES.get('audio_file'):
-            audio_file = request.FILES['audio_file']
+        audio_file = request.FILES['audio_file']
+        try:
             tomp3 = convert_to_wav(audio_file)
             texts = transcribe_audio_file(tomp3)
             textlast = listen_and_respond(command=texts)
             print(textlast)
             if textlast == "MakeNotes":
-                print("hello")
-                return JsonResponse({'redirect': '/Homepage/'})
+                print("Redirecting to homepage")
+                return JsonResponse({'redirect': '/make_notes/'})
+            elif textlast =="ReturnHome":
+               return JsonResponse({'redirect': '/dashboard_student/'})
+            elif textlast =="ListenNotes":
+                return JsonResponse({'redirect': '/student_notes/'})
+            elif textlast =="AskQuestion":
+                return JsonResponse({'redirect': '/student_ask/'})
+            else:
+                return JsonResponse({'error': 'No valid command recognized'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
+    return JsonResponse({'error': 'No audio file received'}, status=400)
 
 
 # views.py
@@ -40,8 +51,7 @@ from django.contrib.auth.decorators import login_required
 from .models import User
 from django.contrib import messages
 
-=======
->>>>>>> a6510effefeb436d93ffaefc27ef1a07b424284b
+
 def landing(request):
     return render(request, 'index.html')
 

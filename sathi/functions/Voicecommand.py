@@ -12,10 +12,9 @@ MATCH_THRESHOLD = 50
 # List of predefined commands
 commands = [
     "MakeNotes",
-    "Speak Notes",
-    "Knowledge of day",
-    "Ask question",
-    "Repeat that",
+    "ListenNotes",
+    "AskQuestion",
+    "Home",
 ]
 
 # Fuzzy match the command
