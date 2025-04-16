@@ -5,6 +5,43 @@ from django.contrib.auth.decorators import login_required
 from .models import User
 from django.contrib import messages
 
+<<<<<<< HEAD
+def test(request):
+    return render(request,"test.html")
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
+from .functions.STT import transcribe_audio_file,convert_to_wav
+from .functions.Voicecommand import listen_and_respond
+
+from django.urls import reverse
+
+
+@csrf_exempt
+def upload_audio(request):
+    if request.method == 'POST' and request.FILES.get('audio_file'):
+            audio_file = request.FILES['audio_file']
+            tomp3 = convert_to_wav(audio_file)
+            texts = transcribe_audio_file(tomp3)
+            textlast = listen_and_respond(command=texts)
+            print(textlast)
+            if textlast == "MakeNotes":
+                print("hello")
+                return JsonResponse({'redirect': '/Homepage/'})
+
+
+
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from .models import User
+from django.contrib import messages
+
+=======
+>>>>>>> a6510effefeb436d93ffaefc27ef1a07b424284b
 def landing(request):
     return render(request, 'index.html')
 
