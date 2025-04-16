@@ -3,8 +3,8 @@ from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-from .views import read
+from .views import Homepage
 
 urlpatterns = [
-    path('read/', read, name="read"),
+    path('Homepage/', Homepage, name="Homepage"),
 ]
