@@ -1,4 +1,9 @@
-git+https://github.com/openai/whisper.git 
-torch  
-torchaudio
-torchvision
+openai-whisper 
+pyaudio 
+numpy 
+soundfile 
+langdetect
+librosa
+speechrecognition
+pydub
+keyboard
