@@ -1,18 +1,31 @@
-from django.urls import path, include
-from rest_framework import routers
+# urls.py
+from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path
-from .views import Homepage,register_view,login_view,logout_view,login_student_view
+from .views import (
+    landing, register_view, login_view,test,
+    logout_view, login_student_view,upload_audio, teacher_student_add_view, teacher_notes, ask_view_student, dashboard_view, make_notes_view_student, dashboard_view_student, notes_view_student
+)
 
 urlpatterns = [
-    path('Homepage/', Homepage, name="Homepage"),
+    path('', landing, name='Landing'),
     path('register/', register_view, name='register'),
     path('login/', login_view, name='login'),
-    path('loginstudent/', login_student_view, name='login_student'),
-    path('register/', register_view, name='register'),
+    path('login/student/', login_student_view, name='login_student'),
     path('logout/', logout_view, name='logout'),
+    path('test/', test, name='test'),
+    path('upload_audio/', upload_audio, name='upload_audio'),
+    path('dashboard/', dashboard_view, name='dashboard'),
+    path('dashboard_student/', dashboard_view_student, name='dashboard_student'),
+    path('student_notes/', notes_view_student, name='student_notes'),
+    path('make_notes/', make_notes_view_student, name='make_notes'),
+    path('student_ask/', ask_view_student, name='student_ask'),
+    path('teacher_student/', teacher_student_add_view, name = 'teacher_student'),
+    path('teacher_notes/', teacher_notes, name = 'teacher_notes'),
 ]
-# Only use in development!
+
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

@@ -1,0 +1,237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <!-- Optional Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <title>Student Dashboard - Padhal Mitra</title>
+    <script src="{% static 'js/voice_recorder.js' %}" defer></script>
+  </head>
+
+  <body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <div class="w-full py-6 bg-gray-100">
+      <div
+        class="max-w-6xl flex items-center justify-between px-6 sm:px-8 lg:px-12 gap-6 sm:gap-8 lg:gap-12"
+      >
+        <!-- Logo -->
+        <img
+          src="{% static 'images/logo.png' %}"
+          alt="logo"
+          class="w-32 h-32 object-contain"
+        />
+
+        <!-- Welcome Text and Avatar -->
+        <div class="flex">
+          <div class="flex flex-col text-center">
+            <h1 class="text-3xl text-gray-800 font-bold">
+              Welcome, {{ user.name }}
+            </h1>
+            <p class="text-md mt-1 text-gray-600">
+              Hold
+              <span class="italic font-semibold">"Space Key"</span> anytime to
+              start learning or asking for help.
+            </p>
+          </div>
+        </div>
+    
+          <div
+            class="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-300 shadow-sm flex items-center justify-center bg-gray-50"
+          >
+            <!-- User Icon (SVG) -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-7 w-7 text-gray-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.75 10.5h.75m3 0h.75"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6.75 17.25c0-2.625 2.25-4.875 5.25-4.875s5.25 2.25 5.25 4.875"
+              />
+            </svg>
+          </div>
+          </div>
+        </div>
+    
+      </div>
+    </header>
+
+    <!-- Main Actions Section -->
+    <section
+      class="flex-grow flex flex-col items-center relative px-4 py-12 bg-gray-100"
+    >
+      <div class="grid grid-cols-3 gap-6 w-full max-w-6xl">
+        <!-- Left Column -->
+        <div class="flex flex-col gap-6">
+          <a
+            href="{% url 'student_notes' %}"
+            class="bg-blue-900 text-white py-4 rounded-xl text-lg hover:bg-blue-400 transition duration-300 w-full text-center"
+          >
+            <i class="fas fa-headphones-alt pr-3"></i>
+            Listen Notes
+          </a>
+          <a
+            href="{% url 'make_notes'%}"
+            class="bg-blue-900 text-white py-4 rounded-xl text-lg hover:bg-blue-400 transition duration-300 w-full text-center"
+          >
+            <i class="fas fa-pencil-alt pr-3"></i>
+            Make Notes
+          </a>
+        </div>
+
+        <!-- Center Column (Microphone) -->
+        <div class="flex items-center justify-center">
+          <a
+          title="Microphone"
+            href="#"
+            class="text-white w-32 h-32 rounded-full shadow-2xl flex items-center justify-center border-4 border-white z-20 hover:opacity-90 transition"
+            style="
+              background: linear-gradient(to bottom, #003366 0%, #0066cc 100%);
+            "
+          >
+            <i class="fas fa-microphone text-3xl" alt = "Microphone"></i>
+          </a>
+        </div>
+
+        <!-- Right Column -->
+        <div class="flex flex-col gap-6">
+          <a
+            href="#"
+            class="bg-yellow-500 text-white py-4 rounded-xl text-lg hover:bg-yellow-400 transition duration-300 w-full text-center"
+          >
+            <i class="fas fa-lightbulb pr-3"></i>
+            General Knowledge
+          </a>
+          <a
+            href="{% url 'student_ask' %}"
+            class="bg-yellow-500 text-white py-4 rounded-xl text-lg hover:bg-yellow-400 transition duration-300 w-full text-center"
+          >
+            <i class="fas fa-question-circle pr-3"></i>
+            Ask a Question
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Notes Section -->
+    <section class="bg-white w-full px-6 py-12">
+      <h2
+        class="text-xl sm:text-2xl md:text-3xl font-bold text-purple-700 pl-4 mb-8 flex items-center gap-2 flex-wrap"
+      >
+        Recent Notes
+    </h2>
+      <div
+        class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+      >
+        {% for note in recent_notes %}
+        <div
+          class="bg-[#fefefe] p-6 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition duration-300"
+        >
+          <div class="flex flex-col h-full justify-between">
+            <div class="mb-4 text-center">
+              <p class="text-xs text-gray-500">{{ note.date|date:"d M Y" }}</p>
+              <p
+                class="text-sm text-{{ note.subject_color }}-700 py-2 font-medium"
+              >
+                {{ note.subject }}
+              </p>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 text-center mt-6">
+              {{ note.title }}
+            </h3>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const synth = window.speechSynthesis;
+          let voices = [];
+      
+          function loadVoices() {
+            voices = synth.getVoices();
+          }
+      
+          // Load voices and wait if needed
+          if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+          }
+      
+          function speak(text) {
+            if (!text || synth.speaking) {
+              synth.cancel();
+              return;
+            }
+      
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = "en-US";
+      
+            // Try to find a female voice (this may vary by browser/system)
+            const femaleVoice = voices.find(voice =>
+              voice.name.includes("Female") ||
+              voice.name.includes("Google US English") ||
+              voice.name.includes("Samantha") ||  // iOS/macOS
+              voice.name.includes("Microsoft Zira") // Windows
+            );
+      
+            if (femaleVoice) {
+              utterance.voice = femaleVoice;
+            }
+      
+            synth.speak(utterance);
+          }
+      
+          const speakableElements = document.querySelectorAll("button, a, li, h1, h2, h3, span, p");
+      
+          speakableElements.forEach((el) => {
+            el.addEventListener("mouseenter", () => {
+              const text =
+                el.innerText.trim() ||
+                el.getAttribute("aria-label") ||
+                el.getAttribute("title");
+      
+              if (text) {
+                speak(text);
+              }
+            });
+      
+            el.addEventListener("mouseleave", () => {
+              synth.cancel();
+            });
+          });
+        });
+      </script>
+        
+  </body>
+</html>

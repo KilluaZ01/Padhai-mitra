@@ -1,62 +1,64 @@
 {% load static %}
 <!DOCTYPE html>
+
 <html lang="en">
   <head>
+    <script src="{% static 'js/voice_recorder.js' %}" defer></script>
     <meta charset="UTF-8" />
     <title>Padhai Mitra</title>
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome (fixed) -->
     <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css"
       rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
   </head>
   <body
-    class="bg-[#022B54] min-h-screen flex flex-col items-center justify-center text-white"
+    class="bg-[#022B54] min-h-screen flex flex-col items-center justify-center text-white font-sans"
   >
     <!-- Logo + Title -->
-    <div class="text-center mb-10">
+    <div class="text-center mb-16">
       <img
         src="{% static 'images/logo.png' %}"
         alt="Padhai Mitra Logo"
-        class="mx-auto w-20 h-20 mb-3"
+        class="mx-auto w-32 mb-3"
       />
-      <h1 class="text-xl font-semibold text-[#ABE0F0]">Padhai Mitra</h1>
     </div>
 
     <!-- Heading -->
-    <h2 class="text-2xl md:text-3xl font-semibold mb-6">
+    <h2 class="text-2xl md:text-3xl font-semibold mb-12">
       Are you <span class="text-white">teacher</span> or
       <span class="text-white">student</span>?
     </h2>
 
     <!-- Options -->
-    <div class="flex items-center justify-center gap-12">
+    <div class="flex items-center justify-center gap-20">
       <!-- Teacher Option -->
       <a
         href="{% url 'login' %}"
-        class="flex flex-col items-center space-y-2 hover:scale-105 transition-transform duration-200"
+        class="flex flex-col items-center space-y-4 hover:scale-105 transition-transform duration-300"
       >
-        <img
-          src="{% static 'images/teacher.png' %}"
-          alt="Teacher"
-          class="w-24 h-24 rounded-full shadow-md"
-        />
-        <span class="text-sm font-medium">Teacher</span>
+        <div class="bg-[#F1C40F] p-6 rounded-2xl shadow-lg text-[#022B54]">
+          <i class="fas fa-chalkboard-teacher text-5xl"></i>
+        </div>
+        <span class="text-lg font-medium text-white">Teacher</span>
       </a>
 
       <!-- Divider -->
-      <div class="w-px h-24 bg-white opacity-20"></div>
+      <div class="w-px h-28 bg-white opacity-20"></div>
 
       <!-- Student Option -->
       <a
         href="{% url 'login_student' %}"
-        class="flex flex-col items-center space-y-2 hover:scale-105 transition-transform duration-200"
+        class="flex flex-col items-center space-y-4 hover:scale-105 transition-transform duration-300"
       >
-        <img
-          src="{% static 'images/student.png' %}"
-          alt="Student"
-          class="w-24 h-24 rounded-full shadow-md"
-        />
-        <span class="text-sm font-medium">Student</span>
+        <div class="bg-[#3498DB] p-6 rounded-2xl shadow-lg text-white">
+          <i class="fas fa-user-graduate text-5xl"></i>
+        </div>
+        <span class="text-lg font-medium text-white">Student</span>
       </a>
     </div>
   </body>
