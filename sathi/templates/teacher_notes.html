@@ -110,32 +110,34 @@
         </div>
 
         <!-- Search bar -->
-        <input
-          id="searchInput"
-          type="text"
-          placeholder="Search notes..."
-          class="w-full md:w-80 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6"
-        />
-        <button
-          onclick="openModal()"
-          class="bg-blue-900 text-white px-4 py-2 rounded-md flex items-center"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <div class="flex justify-between mb-6">
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Search notes..."
+            class="w-full md:w-80 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            onclick="openModal()"
+            class="bg-blue-900 text-white px-4 py-2 rounded-md flex items-center"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          Add Students
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Add Notes
+          </button>
+        </div>
 
         <!-- Notes Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
@@ -144,19 +146,31 @@
             class="note-item bg-white p-6 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition duration-300"
           >
             <div class="flex flex-col h-full justify-between">
-              <div class="mb-4 text-center">
-                <p class="text-xs text-gray-500">
-                  {{ note.date|date:"d M Y" }}
-                </p>
-                <p class="text-sm text-gray-600 py-2 font-medium">
-                  {{ note.subject }}
-                </p>
+              <!-- Header with Date and Subject -->
+              <div class="mb-4 text-center space-y-2">
+                <div
+                  class="flex items-center justify-center text-gray-500 text-sm"
+                >
+                  <i class="far fa-calendar-alt mr-2"></i>
+                  <span>{{ note.date|date:"d M Y" }}</span>
+                </div>
+                <div
+                  class="flex items-center justify-center text-blue-600 text-xl font-medium"
+                >
+                  <i class="fas fa-book-open mr-2"></i>
+                  <span>{{ note.subject }}</span>
+                </div>
               </div>
-              <h3
-                class="note-title text-lg font-semibold text-gray-800 text-center mt-6"
-              >
-                {{ note.title }}
-              </h3>
+
+              <!-- Title with Icon -->
+              <div class="text-center mt-6">
+                <h3
+                  class="note-title text-lg font-semibold text-gray-800 flex items-center justify-center gap-2"
+                >
+                  <i class="fas fa-sticky-note text-yellow-500"></i>
+                  {{ note.title }}
+                </h3>
+              </div>
             </div>
           </div>
           {% empty %}
