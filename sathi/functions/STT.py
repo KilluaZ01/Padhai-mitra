@@ -23,6 +23,7 @@ from tempfile import NamedTemporaryFile
 
 def convert_to_wav(input_file):
     audio = AudioSegment.from_file(input_file)
+    audio = audio.set_channels(1).set_frame_rate(16000)  # Mono, 16kHz
     temp_wav = NamedTemporaryFile(delete=False, suffix=".wav")
     audio.export(temp_wav.name, format="wav")
     return temp_wav.name
@@ -42,27 +43,18 @@ def validate_file_path(filename, default_dir=INPUT_AUDIO_DIR):
         print(f"Error validating path: {e}")
         return None
 
-def transcribe_audio_file(audio_file):
-    """Transcribe WAV audio file using Google's Speech Recognition."""
+def transcribe_audio_file(filepath):
     recognizer = sr.Recognizer()
-    try:
-        # Load audio file (assumed to be WAV)
-        with sr.AudioFile(audio_file) as source:
-            audio = recognizer.record(source)
-        
-        # Transcribe using Google Speech Recognition
-        text = recognizer.recognize_google(audio, language="en-US")
-        print(f"Transcription: {text}")
-        return text
-    except sr.UnknownValueError:
-        print("Error: Could not understand the audio.")
-        return "", "unknown"
-    except sr.RequestError as e:
-        print(f"Error: Could not request results from Google Speech Recognition; {e}")
-        return "", "unknown"
-    except Exception as e:
-        print(f"Error transcribing audio: {e}")
-        return "", "unknown"
+    with sr.AudioFile(filepath) as source:
+        audio_data = recognizer.record(source)
+        try:
+            text = recognizer.recognize_google(audio_data, language="en-US")
+            print(f"Transcribed: {text}")
+            return text.lower()
+        except sr.UnknownValueError:
+            return ""
+        except sr.RequestError as e:
+            raise Exception(f"API Error: {e}")
 
 def transcribe_microphone():
     """Capture and transcribe real-time audio from microphone, controlled by space bar."""

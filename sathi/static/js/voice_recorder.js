@@ -47,7 +47,7 @@ document.addEventListener("keydown", async function (e) {
         };
 
         mediaRecorder.start();
-        console.log("🎙️ Recording started...");
+        console.log("Recording started...");
     }
 });
 

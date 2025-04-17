@@ -19,7 +19,6 @@
     />
 
     <title>Student Dashboard - Padhal Mitra</title>
-    <script src="{% static 'js/voice_recorder.js' %}" defer></script>
   </head>
 
   <body class="min-h-screen bg-gray-50 flex flex-col">
@@ -149,81 +148,90 @@
       </form>
     </section>
 
-    <!-- Speech Synthesis Script -->
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const synth = window.speechSynthesis;
-        let voices = [];
-
-        function loadVoices() {
-          voices = synth.getVoices();
-        }
-
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-          speechSynthesis.onvoiceschanged = loadVoices;
-        }
-
-        function speak(text) {
-          if (!text || synth.speaking) {
-            synth.cancel();
-            return;
+      let mediaRecorder;
+      let audioChunks = [];
+      let isRecording = false;
+      
+      document.addEventListener("keydown", async function (e) {
+          if (e.code === "Space" && !isRecording) {
+              try {
+                  isRecording = true;
+                  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                  mediaRecorder = new MediaRecorder(stream);
+      
+                  mediaRecorder.ondataavailable = (e) => {
+                      audioChunks.push(e.data);
+                  };
+      
+                  mediaRecorder.onstop = async () => {
+                      const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                      const formData = new FormData();
+                      formData.append('audio_file', audioBlob, 'recording.wav');
+      
+                      // Upload the audio file to the server
+                      fetch('/save_note_audio/', {
+                          method: 'POST',
+                          headers: {
+                              'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
+                          },
+                          body: formData
+                      })
+                      .then(res => res.json())
+                      .then(data => {
+                          console.log("Upload response:", data);
+      
+                          // Check if the response contains a 'redirect' key
+                          if (data.redirect) {
+                              // If there's a redirect URL, navigate to it
+                              window.location.href = data.redirect;
+                          } else {
+                              // Fallback to audio playback (if there's no redirect)
+                              if (document.getElementById("audioPlayback")) {
+                                  const audioUrl = URL.createObjectURL(audioBlob);
+                                  document.getElementById("audioPlayback").src = audioUrl;
+                              }
+                          }
+                      })
+                      .catch(err => console.error("Upload error:", err));
+      
+                      audioChunks = [];
+                  };
+      
+                  mediaRecorder.start();
+                  console.log("Recording started...");
+              } catch (err) {
+                  console.error("Error accessing microphone:", err);
+                  alert("Failed to access microphone. Please check permissions.");
+              }
           }
-
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = "en-US";
-
-          const femaleVoice = voices.find(
-            (voice) =>
-              voice.name.includes("Female") ||
-              voice.name.includes("Google US English") ||
-              voice.name.includes("Samantha") ||
-              voice.name.includes("Microsoft Zira")
-          );
-
-          if (femaleVoice) {
-            utterance.voice = femaleVoice;
-          }
-
-          synth.speak(utterance);
-        }
-
-        const speakableElements = document.querySelectorAll(
-          "button, a, li, h1, h2, h3, span, p,  input, textarea, label"
-        );
-
-        speakableElements.forEach((el) => {
-          el.addEventListener("mouseenter", () => {
-            const text =
-              el.innerText.trim() ||
-              el.getAttribute("aria-label") ||
-              el.getAttribute("title");
-
-            if (text) {
-              speak(text);
-            }
-          });
-
-          el.addEventListener("mouseleave", () => {
-            synth.cancel();
-          });
-        });
-
-        // Speak on dashboard load
-        speak("Hold Space Key anytime to start learning or asking for help.");
-
-        // Microphone icon handling
-        const micButton = document
-          .querySelector(".fa-microphone")
-          ?.closest("div");
-        if (micButton) {
-          micButton.addEventListener("mouseenter", () => {
-            speak("Microphone");
-          });
-          micButton.addEventListener("mouseleave", () => {
-            synth.cancel();
-          });
-        }
       });
-    </script>
+      
+      document.addEventListener("keyup", function (e) {
+          if (e.code === "Space" && isRecording) {
+              mediaRecorder.stop();
+              isRecording = false;
+              console.log("Recording stopped.");
+          }
+      });
+      
+      // Helper to get CSRF token
+      function getCSRFToken() {
+          const cookies = document.cookie.split(';');
+          for (let cookie of cookies) {
+              if (cookie.trim().startsWith('csrftoken=')) {
+                  return cookie.trim().substring('csrftoken='.length);
+              }
+          }
+          return '';
+      }
+      </script> 
+    
+    
+    
+      
+
+  
+      
   </body>
 </html>
