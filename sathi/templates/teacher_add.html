@@ -238,7 +238,7 @@
 
         <h2 class="text-xl font-semibold mb-4">Add New Student</h2>
 
-        <form method="post" action="#">
+        <form method="post" action="{% url 'register_student' %}">
           {% csrf_token %}
           <div class="mb-4">
             <label for="name" class="block text-sm font-medium text-gray-700"

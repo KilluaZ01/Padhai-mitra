@@ -1,6 +1,7 @@
 # views.py
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from .models import User
 from django.contrib import messages
@@ -51,7 +52,18 @@ from django.contrib.auth.decorators import login_required
 from .models import User
 from django.contrib import messages
 
+User = get_user_model()
 
+def teacher_student(request):
+    search_query = request.GET.get("search", "")
+    students = User.objects.filter(user_type="student")
+
+    if search_query:
+        students = students.filter(first_name__icontains=search_query)
+
+    return render(request, "teacher/student_detail.html", {
+        "students": students
+    })
 def landing(request):
     return render(request, 'index.html')
 
@@ -74,17 +86,45 @@ def register_view(request):
 
     return render(request, 'register.html')
 
+@login_required
+def register_student(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+
+        # Check if the user already exists
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email already exists.")
+            return redirect('teacher_student')
+
+        # Create the user with user_type=student (you may be using a custom user model)
+        user = User.objects.create(
+            name=name,
+            email=email,
+            password=make_password("student123"),  # Default password
+            user_type="student"
+        )
+        messages.success(request, "Student registered successfully.")
+        return redirect('teacher_student')
 def login_student_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
+
+        print("Login attempt:", email, password)
+
         user = authenticate(request, username=email, password=password)
+
         if user is not None:
-            login(request, user)
-            return redirect('dashboard')  # You can change this to a student dashboard if needed
+            print("User found:", user)
+            if user.user_type == 'student':
+                login(request, user)
+                return redirect('dashboard_student')
+            else:
+                messages.error(request, "Access denied. Only students can log in here.")
         else:
-            messages.error(request, "Invalid credentials.")
-            return redirect('login_student')
+            print("Authentication failed")
+            messages.error(request, "Invalid email or password.")
 
     return render(request, 'login_student.html')
 
