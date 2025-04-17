@@ -3,9 +3,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
-from .models import User
+from .models import Note, User
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
 from .functions.STT import transcribe_audio_file,convert_to_wav
@@ -25,9 +25,10 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from .models import User
 from django.contrib import messages
-from .functions.face.auth import is_face_authenticated
-import face_recognition
+# from .functions.face.auth import is_face_authenticated
+# import face_recognition
 import pygame
+from django.utils import timezone
 
 def test(request):
     return render(request,"test.html")
@@ -65,10 +66,6 @@ def upload_audio(request):
                 os.remove(tomp3)
 
     return JsonResponse({'error': 'No audio file received'}, status=400)
-
-
-
-
 
 import os
 import time
@@ -177,7 +174,7 @@ def register_view(request):
             messages.error(request, "Email already exists.")
             return redirect('login')
 
-        user = User(name=name, email=email, user_type=user_type)
+        user = User(name=name, email=email, user_type="teacher")
         user.set_password(password)
         user.save()
         login(request, user)
@@ -244,6 +241,8 @@ def login_view(request):
             return redirect('login')
 
     return render(request, 'login.html')
+# pip install face_recognition
+
 
 import os
 import time
@@ -386,6 +385,50 @@ def teacher_student_add_view(request):
 
 def teacher_notes(request):
     return render(request, 'teacher_notes.html')
+
+@login_required
+def create_note(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        subject = request.POST.get('subject')
+        content = request.POST.get('content')
+        pdf_file = request.FILES.get('pdf')
+
+        if not title or not subject:
+            return HttpResponseBadRequest('Title and Subject are required.')
+
+        note = Note(
+            user=request.user,
+            title=title,
+            subject=subject,
+            date=timezone.now()  # Manually set current datetime
+        )
+
+        if pdf_file:
+            note.file = pdf_file
+
+        # If content is needed, store it in another model field or logic
+        note.save()
+        return redirect('teacher_notes')
+
+    return render(request, 'teacher_notes.html')
+
+@login_required
+def note_list(request):
+    notes = Note.objects.filter(user=request.user)
+    return render(request, 'teacher_notes.html', {'notes': notes})
+
+@login_required
+def teacher_notes(request):
+    query = request.GET.get('search', '')
+    if query:
+        notes = Note.objects.filter(title__icontains=query)
+    else:
+        notes = Note.objects.all()
+    return render(request, '.html', {'notes': notes, 'query': query})
+
+def teacher_questions(request):
+    return render(request, 'teacher_questions.html')
 
 def logout_view(request):
     logout(request)
