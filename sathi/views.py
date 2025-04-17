@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
 from .functions.STT import transcribe_audio_file,convert_to_wav
 from .functions.Voicecommand import listen_and_respond,listen_and_respond_pdf
-from .functions.TTS import speak
+from .functions.TTS import speak,extract_filenames
 import speech_recognition as sr
 from pydub import AudioSegment
 import speech_recognition as sr
@@ -255,7 +255,9 @@ from django.shortcuts import render
 from django.http import JsonResponse
 
 def notes_view_student(request):
-    context = {}  # context to pass to template
+    file_count, filenmaes = extract_filenames(folder_path="sathi/functions/teacher")
+    context = {'notes': filenmaes}
+    print(context)
 
     if request.method == 'POST' and request.FILES.get('audio_file'):
         audio_file = request.FILES['audio_file']
@@ -322,8 +324,58 @@ def dashboard_view_student(request):
 def make_notes_view_student(request):
     return render(request, 'student_make_notes.html')
 
+
+
+
+
+from .models import Question
+from django.contrib.auth.decorators import login_required
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from django.http import JsonResponse
+import os, time
+
+@login_required
 def ask_view_student(request):
-    return render(request, 'student_ask.html')
+    if request.method == 'POST' and request.FILES.get('audio_file'):
+        audio_file = request.FILES['audio_file']
+        tomp3 = None
+        try:
+            # Convert audio file to WAV format if necessary
+            tomp3 = convert_to_wav(audio_file)
+
+            # Transcribe audio to text
+            texts = transcribe_audio_file(tomp3)
+            print("done")
+
+            # Save the transcribed text to the Question model
+            Question.objects.create(
+                user=request.user,
+                name=request.user.name,  # or any name you want
+                question=texts
+            )
+
+            return JsonResponse({'success': True, 'message': 'Audio processed, text saved successfully, and question saved to database.'})
+        
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+        
+        finally:
+            if tomp3 and os.path.exists(tomp3):
+                time.sleep(5)  # Delay 5 seconds before deletion
+                os.remove(tomp3)
+    
+    else:
+        
+        return render(request, 'student_ask.html')  # ➔ your template
+
+
+
+def get_all_questions(request):
+    questions = Question.objects.filter(user=request.user).values('name', 'question')
+    print(questions)
+    return JsonResponse(list(questions), safe=False)
 
 @login_required
 def dashboard_view(request):

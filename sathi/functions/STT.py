@@ -7,8 +7,8 @@ import audioop
 from queue import Queue
 
 # Configuration
-# INPUT_AUDIO_DIR = r"C:\Users\Lenovo\OneDrive\Desktop\PadhaiMitra\Padhai_Sathi\Padhai-Sathi\Files\Students\Inputs"
-# OUTPUT_DIR = r"C:\Users\Lenovo\OneDrive\Desktop\PadhaiMitra\Padhai_Sathi\Padhai-Sathi\Files\Students\Notes"
+INPUT_AUDIO_DIR = r"C:\Users\Lenovo\OneDrive\Desktop\PadhaiMitra\Padhai_Sathi\Padhai-Sathi\Files\Students\Inputs"
+OUTPUT_DIR = r"C:\Users\Lenovo\OneDrive\Desktop\PadhaiMitra\Padhai_Sathi\Padhai-Sathi\Files\Students\Notes"
 DEFAULT_RECORD_DURATION = 30  # Fallback duration if needed (seconds)
 SAMPLE_RATE = 16000  # Sample rate for audio capture
 SAMPLE_WIDTH = 2  # 16-bit audio
@@ -27,7 +27,7 @@ def convert_to_wav(input_file):
     audio.export(temp_wav.name, format="wav")
     return temp_wav.name
 
-# def validate_file_path(filename, default_dir=INPUT_AUDIO_DIR):
+def validate_file_path(filename, default_dir=INPUT_AUDIO_DIR):
     """Validate and normalize file path."""
     try:
         if os.path.isabs(filename):

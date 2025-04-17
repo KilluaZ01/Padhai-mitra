@@ -252,22 +252,5 @@ function getCSRFToken() {
 }
 
     </script>
-    <script>
-      document.addEventListener('keydown', function(event) {
-          if (event.code === 'Space') {
-              fetch('/stop-music/', {
-                  method: 'POST',
-                  headers: {
-                      'X-CSRFToken': '{{ csrf_token }}',
-                  }
-              }).then(response => response.json())
-              .then(data => {
-                  console.log(data.message);
-              }).catch(error => {
-                  console.error('Error stopping music:', error);
-              });
-          }
-      });
-      </script>
   </body>
 </html>
