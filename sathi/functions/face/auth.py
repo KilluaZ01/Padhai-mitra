@@ -17,11 +17,11 @@ import time
 
 # Define constants
 # Path to the CSV file storing face encodings and student names
-CSV_FILENAME = r"C:\Users\ACER\gitClones\Padhai-Sathi\sathi\functions\face\encoding.csv"
+CSV_FILENAME = r"sathi/functions/face/encoding.csv"
 # Path to the folder containing teacher-uploaded student images
-IMAGE_FOLDER = r"C:\Users\ACER\gitClones\Padhai-Sathi\sathi\functions\face\imageFolder"
+IMAGE_FOLDER = r"sathi/functions/face/testimage"
 # Path to the folder where processed images are moved
-PROCESSED_FOLDER = r"C:\Users\ACER\gitClones\Padhai-Sathi\sathi\functions\face\processedFolder"
+PROCESSED_FOLDER = r"sathi/functions/face/processedFolder"
 # Number of frames to process in a batch for efficiency
 BATCH_SIZE = 3
 # Top-left coordinates of the static box for authentication zone
@@ -325,10 +325,6 @@ if __name__ == "__main__":
             # Process the image to append encodings
             append_face_encodings(image_path, student_name)
     
-    append_face_encodings(
-        'test.jpg',
-        "Test_Student"
-    )
 
     # Start the main authentication loop
     main()
