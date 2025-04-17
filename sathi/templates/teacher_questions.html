@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Dashboard</title>
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <!-- Custom CSS (Optional) -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <aside class="w-72 bg-white shadow-md flex flex-col justify-between">
+        <div>
+          <div class="p-4 text-center border-b">
+            <img
+              src="{% static 'images/logo.png' %}"
+              alt="Logo"
+              class="w-24 mx-auto"
+            />
+          </div>
+          <nav class="divide-y divide-gray-200">
+            <a
+              href="{% url 'dashboard' %}"
+              class="flex items-center px-6 py-4 hover:bg-gray-100 group"
+            >
+              <i
+                class="fas fa-tachometer-alt text-gray-500 group-hover:text-blue-700"
+              ></i>
+              <span class="ml-4 text-gray-700 group-hover:text-blue-700"
+                >Dashboard</span
+              >
+            </a>
+            <a
+              href="{% url 'teacher_student' %}"
+              class="flex items-center px-6 py-4 hover:bg-gray-100 group"
+            >
+              <i
+                class="fas fa-user-graduate text-gray-500 group-hover:text-blue-700"
+              ></i>
+              <span class="ml-4 text-gray-700 group-hover:text-blue-700"
+                >Students Detail</span
+              >
+            </a>
+            <a
+              href="{% url 'teacher_notes' %}"
+              class="flex items-center px-6 py-4 hover:bg-gray-100 group"
+            >
+              <i
+                class="fas fa-paper-plane text-gray-500 group-hover:text-blue-700"
+              ></i>
+              <span class="ml-4 text-gray-700 group-hover:text-blue-700"
+                >Send Notes</span
+              >
+            </a>
+            <a
+              href="{% url 'teacher_questions' %}"
+              class="flex items-center px-6 py-4 hover:bg-gray-100 group"
+            >
+              <i
+                class="fas fa-sticky-note text-gray-500 group-hover:text-blue-700"
+              ></i>
+              <span class="ml-4 text-gray-700 group-hover:text-blue-700"
+                >Questions Asked</span
+              >
+            </a>
+          </nav>
+        </div>
+        <div class="p-4">
+          <a
+            href="{% url 'logout' %}"
+            class="flex items-center text-red-600 hover:text-red-800"
+          >
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="ml-2">Logout</span>
+          </a>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main class="flex-1 p-6 overflow-y-auto">
+        <h1 class="text-3xl font-semibold text-gray-800 mb-6">
+          Student Questions
+        </h1>
+
+        {% if questions %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for question in questions %}
+          <div
+            class="bg-white p-4 rounded-xl shadow hover:shadow-md transition duration-200"
+          >
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">
+              {{ question.title|default:"Untitled Question" }}
+            </h2>
+            <p class="text-gray-600 text-sm mb-3">
+              {{ question.body|truncatewords:25 }}
+            </p>
+            <div class="text-xs text-gray-400">
+              Asked by:
+              <span class="font-medium text-gray-700"
+                >{{ question.student.name }}</span
+              >
+              <br />
+              Date: {{ question.created_at|date:"M d, Y" }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-600">No questions have been asked yet.</p>
+        {% endif %}
+      </main>
+    </div>
+  </body>
+</html>

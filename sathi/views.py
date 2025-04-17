@@ -153,7 +153,7 @@ def register_view(request):
             messages.error(request, "Email already exists.")
             return redirect('login')
 
-        user = User(name=name, email=email, user_type=user_type)
+        user = User(name=name, email=email, user_type="teacher")
         user.set_password(password)
         user.save()
         login(request, user)
@@ -244,6 +244,9 @@ def teacher_student_add_view(request):
 
 def teacher_notes(request):
     return render(request, 'teacher_notes.html')
+
+def teacher_questions(request):
+    return render(request, 'teacher_questions.html')
 
 def logout_view(request):
     logout(request)
