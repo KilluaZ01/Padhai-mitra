@@ -19,13 +19,6 @@ from django.urls import reverse
 from django.conf import settings
 import os
 import time
-from django.shortcuts import render, redirect
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth import authenticate, login, logout, get_user_model
-from django.contrib.auth.decorators import login_required
-from .models import User
-from django.contrib import messages
-
 
 def test(request):
     return render(request,"test.html")
@@ -66,17 +59,6 @@ def upload_audio(request):
     return JsonResponse({'error': 'No audio file received'}, status=400)
 
 
-
-import os
-import time
-import uuid
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
-import uuid
-import time
-import os
-from django.http import JsonResponse
 
 import os
 import time
@@ -153,7 +135,7 @@ def register_view(request):
             messages.error(request, "Email already exists.")
             return redirect('login')
 
-        user = User(name=name, email=email, user_type=user_type)
+        user = User(name=name, email=email, user_type='teacher')
         user.set_password(password)
         user.save()
         login(request, user)
