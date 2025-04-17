@@ -67,17 +67,16 @@ class Note(models.Model):
     subject = models.CharField(max_length=100)
     title = models.CharField(max_length=200)
     file = models.FileField(upload_to='notes/')
-    
+    date = models.DateTimeField(null= True, blank= True)  # Automatically sets the date when the note is created
+
     def __str__(self):
         return f'{self.title} - {self.user.email}'
 
     # Override delete to remove the note file when Note is deleted
     def delete(self, *args, **kwargs):
-        if self.file:
-            if os.path.isfile(self.file.path):
-                os.remove(self.file.path)
+        if self.file and os.path.isfile(self.file.path):
+            os.remove(self.file.path)
         super().delete(*args, **kwargs)
-
 
 # Question Model
 class Question(models.Model):
