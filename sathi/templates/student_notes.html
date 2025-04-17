@@ -29,7 +29,7 @@
       >
         <!-- Logo -->
         <div class="flex items-center gap-3">
-          <a href="{% url 'dashboard_student'%}">
+          <a href="{% url 'dashboard_student' %}">
             <img
               src="{% static 'images/logo.png' %}"
               alt="logo"
@@ -38,6 +38,7 @@
           </a>
         </div>
 
+        <!-- Title -->
         <div class="text-center">
           <h1 class="text-xl sm:text-2xl font-bold text-gray-800">
             Listen <span class="text-blue-800">Notes</span>
@@ -64,11 +65,6 @@
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M9.75 10.5h.75m3 0h.75"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
               d="M6.75 17.25c0-2.625 2.25-4.875 5.25-4.875s5.25 2.25 5.25 4.875"
             />
           </svg>
@@ -76,25 +72,20 @@
       </div>
     </header>
 
-    <!-- Title -->
-    <div class="flex flex-col pl-6 sm:pl-8 md:pl-16 lg:pl-48">
-      <h1 class="text-3xl text-gray-800 font-bold text-center">
+    <!-- Title and Back Button -->
+    <section class="w-full max-w-6xl mx-auto mt-10 px-4 sm:px-6">
+      <h2 class="text-2xl font-bold text-gray-700 mb-6 text-center relative">
+        <a
+          href="{% url 'dashboard_student' %}"
+          class="absolute left-0 text-md sm:text-base text-blue-700 hover:underline"
+        >
+          <i class="fas fa-arrow-left mr-1"></i> Back
+        </a>
         Available Notes
-      </h1>
-    </div>
-
-    <!-- Back Button -->
-    <section class="bg-white w-full px-6 py-4">
-      <h2
-        class="sm:text-2xl md:text-3xl font-bold text-gray-700 pl-4 md:pl-16 lg:pl-48 mb-8 flex items-center gap-2"
-      >
-        <i class="fas fa-arrow-left"></i> <span>Back</span>
       </h2>
 
       <!-- Notes Grid -->
-      <div
-        class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-      >
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {% for note in notes %}
         <div
           class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition duration-300 speak-on-hover"
@@ -109,28 +100,81 @@
             <h3 class="text-lg font-semibold text-gray-800 mt-6">
               {{ note.title }}
             </h3>
+            <div>
+              <a
+                title="Listen Now"
+                href="#"
+                class="text-white w-full h-28 mt-6 rounded-xl shadow-2xl flex items-center justify-center border-4 border-white z-20 hover:opacity-90 transition"
+                style="
+                  background: linear-gradient(
+                    to bottom,
+                    #003366 0%,
+                    #0066cc 100%
+                  );
+                "
+              >
+                <i class="fa fa-play-circle text-5xl" alt="Microphone"></i>
+              </a>
+            </div>
           </div>
         </div>
         {% endfor %}
       </div>
     </section>
 
-    <!-- JavaScript for Read Aloud -->
     <script>
-      const speakElements = document.querySelectorAll(".speak-on-hover");
+      document.addEventListener("DOMContentLoaded", function () {
+        const synth = window.speechSynthesis;
+        let voices = [];
 
-      speakElements.forEach((el) => {
-        el.addEventListener("mouseenter", () => {
-          const subject = el.querySelector("p:nth-child(2)").textContent;
-          const title = el.querySelector("h3").textContent;
-          const message = `${subject}. ${title}`;
-          const utterance = new SpeechSynthesisUtterance(message);
-          window.speechSynthesis.cancel(); // Stop previous speech
-          window.speechSynthesis.speak(utterance);
-        });
+        function loadVoices() {
+          voices = synth.getVoices();
+        }
 
-        el.addEventListener("mouseleave", () => {
-          window.speechSynthesis.cancel();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+          speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        loadVoices();
+
+        function speak(text) {
+          if (!text) return;
+
+          synth.cancel(); // stop previous speech
+
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = "en-US";
+
+          const femaleVoice = voices.find(
+            (voice) =>
+              voice.name.includes("Female") ||
+              voice.name.includes("Google US English") ||
+              voice.name.includes("Samantha") ||
+              voice.name.includes("Microsoft Zira")
+          );
+
+          if (femaleVoice) {
+            utterance.voice = femaleVoice;
+          }
+
+          synth.speak(utterance);
+        }
+
+        const noteCards = document.querySelectorAll(".speak-on-hover");
+
+        noteCards.forEach((card) => {
+          card.addEventListener("mouseenter", () => {
+            const date =
+              card.querySelector("p.text-xs")?.innerText.trim() || "";
+            const subject =
+              card.querySelector("p.text-sm")?.innerText.trim() || "";
+            const title = card.querySelector("h3")?.innerText.trim() || "";
+
+            const combinedText = `${title}. Subject: ${subject}. Date: ${date}`;
+            speak(combinedText);
+          });
+
+          card.addEventListener("mouseleave", () => synth.cancel());
         });
       });
     </script>
