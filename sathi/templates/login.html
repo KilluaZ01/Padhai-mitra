@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Teacher Sign In</title>
+    <title>Student Sign In</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{% static 'js/voice_recorder.js' %}" defer></script>
     <!-- Font Awesome CDN -->
@@ -12,19 +12,28 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
-    <script
-      src="https://kit.fontawesome.com/a076d05399.js"
-      crossorigin="anonymous"
-    ></script>
   </head>
   <body
     class="min-h-screen flex items-center justify-center bg-[#003366] py-12 px-4 sm:px-6 lg:px-8"
   >
     <div class="max-w-md w-full space-y-4 flex flex-col items-center">
+      <!-- Visible Back Button -->
+      <div class="w-full flex justify-start">
+        <a
+          href="{% url 'Landing' %}"
+          class="inline-flex items-center bg-red-300 text-white font-semibold px-3 py-1.5 rounded-lg shadow hover:bg-red-600 transition duration-300"
+        >
+          <i class="fas fa-arrow-left mr-2"></i>
+          Back to Home
+        </a>
+      </div>
+
+
+
       <!-- Logo -->
       <div class="flex flex-col items-center">
         <div class="rounded-lg">
-          <a href="">
+          <a href="{% url 'Landing' %}" aria-label="Go to homepage">
             <img class="w-32" src="{% static 'images/logo.png' %}" alt="Logo" />
           </a>
         </div>

@@ -90,12 +90,20 @@ def transcribe_microphone():
         audio_thread.daemon = True
         audio_thread.start()
         
+<<<<<<< HEAD
+        # Wait for first space bar press to start
+=======
         # # Wait for first space bar press to start
+>>>>>>> 71c5765d22c00796e85f4280613cfdda96354907
         # keyboard.wait('space')
         # print("Recording started. Press space bar again to stop.")
         # recording = True
         
+<<<<<<< HEAD
+        # Wait for second space bar press to stop
+=======
         # # Wait for second space bar press to stop
+>>>>>>> 71c5765d22c00796e85f4280613cfdda96354907
         # keyboard.wait('space')
         # recording = False
         # stop_event.set()

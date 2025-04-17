@@ -24,11 +24,9 @@
   <body class="min-h-screen flex flex-col bg-gray-50">
     <!-- Header -->
     <header class="w-full bg-white border-b shadow-sm py-4">
-      <div
-        class="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-8"
-      >
+      <div class="max-w-6xl mx-auto grid grid-cols-3 items-center px-4 sm:px-8">
         <!-- Logo -->
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 justify-start">
           <a href="{% url 'dashboard_student' %}">
             <img
               src="{% static 'images/logo.png' %}"
@@ -46,43 +44,49 @@
         </div>
 
         <!-- Profile Icon -->
-        <div
-          class="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-blue-300 bg-gray-50 flex items-center justify-center shadow-sm"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-6 h-6 sm:w-7 sm:h-7 text-gray-700"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="1.5"
+        <div class="flex justify-end">
+          <div
+            class="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-blue-300 bg-gray-50 flex items-center justify-center shadow-sm"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 4.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6.75 17.25c0-2.625 2.25-4.875 5.25-4.875s5.25 2.25 5.25 4.875"
-            />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 sm:w-7 sm:h-7 text-gray-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-label="User Profile"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6.75 17.25c0-2.625 2.25-4.875 5.25-4.875s5.25 2.25 5.25 4.875"
+              />
+            </svg>
+          </div>
         </div>
       </div>
     </header>
 
     <!-- Title and Back Button -->
     <section class="w-full max-w-6xl mx-auto mt-10 px-4 sm:px-6">
-      <h2 class="text-2xl font-bold text-gray-700 mb-6 text-center relative">
+      <div class="flex items-center justify-between mb-6">
         <a
           href="{% url 'dashboard_student' %}"
-          class="absolute left-0 text-md sm:text-base text-blue-700 hover:underline"
+          class="text-md sm:text-base text-blue-700 hover:underline speak-on-hover"
         >
           <i class="fas fa-arrow-left mr-1"></i> Back
         </a>
-        Available Notes
-      </h2>
+        <h2 class="text-2xl font-bold text-gray-700 text-center flex-1 speak-on-hover">
+          Available Notes
+        </h2>
+        <div class="text-md sm:text-base w-14"></div>
+      </div>
 
       <!-- Notes Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -113,7 +117,7 @@
                   );
                 "
               >
-                <i class="fa fa-play-circle text-5xl" alt="Microphone"></i>
+                <i class="fa fa-play-circle text-5xl"></i>
               </a>
             </div>
           </div>
@@ -160,21 +164,27 @@
           synth.speak(utterance);
         }
 
-        const noteCards = document.querySelectorAll(".speak-on-hover");
+        const speakElements = document.querySelectorAll(".speak-on-hover");
 
-        noteCards.forEach((card) => {
-          card.addEventListener("mouseenter", () => {
-            const date =
-              card.querySelector("p.text-xs")?.innerText.trim() || "";
-            const subject =
-              card.querySelector("p.text-sm")?.innerText.trim() || "";
-            const title = card.querySelector("h3")?.innerText.trim() || "";
-
-            const combinedText = `${title}. Subject: ${subject}. Date: ${date}`;
-            speak(combinedText);
+        speakElements.forEach((element) => {
+          element.addEventListener("mouseenter", () => {
+            // For note cards, combine date, subject, and title
+            if (element.classList.contains("bg-white")) {
+              const date =
+                element.querySelector("p.text-xs")?.innerText.trim() || "";
+              const subject =
+                element.querySelector("p.text-sm")?.innerText.trim() || "";
+              const title = element.querySelector("h3")?.innerText.trim() || "";
+              const combinedText = `${title}. Subject: ${subject}. Date: ${date}`;
+              speak(combinedText);
+            } else {
+              // For Back button and Available Notes header, use their text content
+              const text = element.innerText.trim();
+              speak(text);
+            }
           });
 
-          card.addEventListener("mouseleave", () => synth.cancel());
+          element.addEventListener("mouseleave", () => synth.cancel());
         });
       });
     </script>

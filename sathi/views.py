@@ -19,6 +19,8 @@ from django.urls import reverse
 from django.conf import settings
 import os
 import time
+<<<<<<< HEAD
+=======
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout, get_user_model
@@ -29,6 +31,7 @@ from django.contrib import messages
 # import face_recognition
 import pygame
 from django.utils import timezone
+>>>>>>> 71c5765d22c00796e85f4280613cfdda96354907
 
 def test(request):
     return render(request,"test.html")
@@ -67,6 +70,11 @@ def upload_audio(request):
 
     return JsonResponse({'error': 'No audio file received'}, status=400)
 
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> 71c5765d22c00796e85f4280613cfdda96354907
 import os
 import time
 import uuid
@@ -174,7 +182,11 @@ def register_view(request):
             messages.error(request, "Email already exists.")
             return redirect('login')
 
+<<<<<<< HEAD
+        user = User(name=name, email=email, user_type='teacher')
+=======
         user = User(name=name, email=email, user_type="teacher")
+>>>>>>> 71c5765d22c00796e85f4280613cfdda96354907
         user.set_password(password)
         user.save()
         login(request, user)

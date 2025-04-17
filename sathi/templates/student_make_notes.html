@@ -17,7 +17,6 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
 
-    <title>Student Dashboard - Padhal Mitra</title>
     <title>Make Note - Padhal Mitra</title>
   </head>
 
@@ -74,7 +73,8 @@
           href="{% url 'dashboard_student' %}"
           class="absolute left-0 text-md sm:text-base text-blue-700 hover:underline"
         >
-          Back
+        <i class="fas fa-arrow-left mr-1"></i> Back
+      </a>
         </a>
         Create a New Note
       </h2>
@@ -238,60 +238,113 @@
       }
     </script>
 
-    <!-- Read Out Loud Script -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const synth = window.speechSynthesis;
-        let voices = [];
 
-        function loadVoices() {
-          voices = synth.getVoices();
-        }
+<!-- Title and Back Button -->
+<div class="flex items-center justify-between mb-6">
+  <a
+    href="{% url 'dashboard_student' %}"
+    class="text-md sm:text-base text-blue-700 hover:underline speak-on-hover"
+  >
+    <i class="fas fa-arrow-left mr-1"></i> Back
+  </a>
+  <h2 class="text-2xl font-bold text-gray-700 text-center flex-1 speak-on-hover">
+    Create a New Note
+  </h2>
+  <div class="text-md sm:text-base w-14"></div>
+</div>
 
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-          speechSynthesis.onvoiceschanged = loadVoices;
-        }
+<!-- Read Out Loud Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const synth = window.speechSynthesis;
+    let voices = [];
 
-        loadVoices(); // Load initially
+    function loadVoices() {
+      voices = synth.getVoices();
+    }
 
-        function speak(text) {
-          if (!text) return;
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
 
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = "en-US";
+    loadVoices();
 
-          const femaleVoice = voices.find(
-            (voice) =>
-              voice.name.includes("Female") ||
-              voice.name.includes("Google US English") ||
-              voice.name.includes("Samantha") ||
-              voice.name.includes("Microsoft Zira")
-          );
+    function speak(text) {
+      if (!text) return;
 
-          if (femaleVoice) {
-            utterance.voice = femaleVoice;
+      synth.cancel(); // stop previous speech
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+
+      const femaleVoice = voices.find(
+        (voice) =>
+          voice.name.includes("Female") ||
+          voice.name.includes("Google US English") ||
+          voice.name.includes("Samantha") ||
+          voice.name.includes("Microsoft Zira")
+      );
+
+      if (femaleVoice) {
+        utterance.voice = femaleVoice;
+      }
+
+      synth.speak(utterance);
+    }
+
+    // Speak on hover for form elements, buttons, and speak-on-hover elements
+    const speakableElements = document.querySelectorAll(
+      "button, a, li, h1, h2, h3, span, p, input, label, textarea, .speak-on-hover"
+    );
+
+    speakableElements.forEach((el) => {
+      if (el.classList.contains("speak-on-hover")) {
+        el.addEventListener("mouseenter", () => {
+          const text = el.innerText.trim();
+          if (text) speak(text);
+        });
+      } else {
+        el.addEventListener("mouseenter", () => {
+          let text =
+            el.innerText.trim() ||
+            el.getAttribute("aria-label") ||
+            el.getAttribute("title");
+
+          if (
+            el.tagName.toLowerCase() === "input" ||
+            el.tagName.toLowerCase() === "textarea"
+          ) {
+            text = el.placeholder || text;
+            const label = document.querySelector(`label[for="${el.id}"]`);
+            if (label) text = label.innerText.trim() || text;
           }
 
-          synth.speak(utterance);
-        }
-
-        const readButton = document.querySelector("button.bg-blue-900");
-        const titleField = document.getElementById("title");
-        const subjectField = document.getElementById("subject");
-        const contentField = document.getElementById("content");
-
-        readButton.addEventListener("click", function (e) {
-          e.preventDefault();
-          synth.cancel(); // Stop any ongoing speech
-
-          const title = titleField.value.trim();
-          const subject = subjectField.value.trim();
-          const content = contentField.value.trim();
-
-          const message = `Title: ${title}. Subject: ${subject}. Note Content: ${content}`;
-          speak(message);
+          if (text) speak(text);
         });
-      });
-    </script>
+      }
+
+      el.addEventListener("mouseleave", () => synth.cancel());
+    });
+
+    // Existing Read Out Loud functionality
+    const readButton = document.querySelector("button.bg-blue-900");
+    const titleField = document.getElementById("title");
+    const subjectField = document.getElementById("subject");
+    const contentField = document.getElementById("content");
+
+    readButton.addEventListener("click", function (e) {
+      e.preventDefault();
+      synth.cancel(); // Stop any ongoing speech
+
+      const title = titleField.value.trim();
+      const subject = subjectField.value.trim();
+      const content = contentField.value.trim();
+
+      const message = `Title: ${title}. Subject: ${subject}. Note Content: ${content}`;
+      speak(message);
+    });
+  });
+</script>
+
   </body>
 </html>
