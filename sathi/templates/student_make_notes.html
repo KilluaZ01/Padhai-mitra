@@ -76,20 +76,25 @@
           Back
         </a>
         Create a New Note
-        <a
-          title="Microphone"
-          href="#"
-          class="absolute top-0 right-0 text-white w-28 h-12 rounded-2xl shadow-2xl flex items-center justify-center border-4 border-white z-20 hover:opacity-90 transition"
-          style="
-            background: linear-gradient(to bottom, #003366 0%, #0066cc 100%);
-          "
-        >
-          <i class="fas fa-microphone text-lg" alt="Microphone"></i>
-        </a>
       </h2>
 
-      <form method="post" class="bg-white p-6 rounded-xl shadow-md space-y-6">
+      <form
+        method="post"
+        class="bg-white pb-6 px-6 pt-4 rounded-xl shadow-md space-y-6"
+      >
         {% csrf_token %}
+        <div class="flex justify-center">
+          <a
+            title="Give Command"
+            href="#"
+            class="text-white w-32 h-32 rounded-full shadow-2xl flex items-center justify-center border-4 border-white z-20 hover:opacity-90 transition"
+            style="
+              background: linear-gradient(to bottom, #003366 0%, #0066cc 100%);
+            "
+          >
+            <i class="fas fa-microphone text-4xl" alt="Microphone"></i>
+          </a>
+        </div>
 
         <div>
           <label for="title" class="block text-sm font-medium text-gray-700"
@@ -134,20 +139,77 @@
           >
         </div>
 
-        <div class="flex justify-center gap-3">
+        <div class="flex justify-center gap-6">
           <button
-            class="bg-blue-900 hover:bg-blue-700 text-sm text-white font-semibold px-6 py-3 rounded-lg transition duration-300"
+            type="button"
+            class="bg-blue-900 hover:bg-blue-700 text-md text-white font-semibold px-8 py-4 rounded-lg transition duration-300"
           >
             Read Out Loud
           </button>
           <button
             type="submit"
-            class="bg-yellow-500 hover:bg-yellow-400 text-sm text-white font-semibold px-6 py-3 rounded-lg transition duration-300"
+            class="bg-yellow-500 hover:bg-yellow-400 text-md text-white font-semibold px-8 py-4 rounded-lg transition duration-300"
           >
             Save Note
           </button>
         </div>
       </form>
     </section>
+
+    <!-- Read Out Loud Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const synth = window.speechSynthesis;
+        let voices = [];
+
+        function loadVoices() {
+          voices = synth.getVoices();
+        }
+
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+          speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        loadVoices(); // Load initially
+
+        function speak(text) {
+          if (!text) return;
+
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = "en-US";
+
+          const femaleVoice = voices.find(
+            (voice) =>
+              voice.name.includes("Female") ||
+              voice.name.includes("Google US English") ||
+              voice.name.includes("Samantha") ||
+              voice.name.includes("Microsoft Zira")
+          );
+
+          if (femaleVoice) {
+            utterance.voice = femaleVoice;
+          }
+
+          synth.speak(utterance);
+        }
+
+        const readButton = document.querySelector("button.bg-blue-900");
+        const titleField = document.getElementById("title");
+        const subjectField = document.getElementById("subject");
+        const contentField = document.getElementById("content");
+
+        readButton.addEventListener("click", function (e) {
+          e.preventDefault();
+          synth.cancel(); // Stop any ongoing speech
+
+          const title = titleField.value.trim();
+          const subject = subjectField.value.trim();
+          const content = contentField.value.trim();
+
+          const message = `Title: ${title}. Subject: ${subject}. Note Content: ${content}`;
+          speak(message);
+        });
+      });
+    </script>
   </body>
 </html>
