@@ -4,7 +4,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import (
     landing, register_view, register_student, login_view,test,
+<<<<<<< HEAD
     logout_view, login_student_view,save_note_audio,upload_audio, teacher_student_add_view, teacher_notes, ask_view_student, dashboard_view, make_notes_view_student, dashboard_view_student, notes_view_student
+=======
+    logout_view, login_student_view,upload_audio, teacher_student_add_view, teacher_notes, ask_view_student, dashboard_view, make_notes_view_student, dashboard_view_student, notes_view_student
+>>>>>>> b1453d1ee6062e07aadf3b410fe152aa1c1d2bbc
 )
 
 urlpatterns = [

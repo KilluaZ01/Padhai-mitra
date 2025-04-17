@@ -7,15 +7,14 @@ import audioop
 from queue import Queue
 
 # Configuration
-INPUT_AUDIO_DIR = r"C:\Users\ACER\gitClones\Padhai-Sathi\Files\Students\Inputs"
-OUTPUT_DIR = r"C:\Users\ACER\gitClones\Padhai-Sathi\Files\Students\Notes"
+INPUT_AUDIO_DIR = r"C:\Users\Lenovo\OneDrive\Desktop\PadhaiMitra\Padhai_Sathi\Padhai-Sathi\Files\Students\Inputs"
+OUTPUT_DIR = r"C:\Users\Lenovo\OneDrive\Desktop\PadhaiMitra\Padhai_Sathi\Padhai-Sathi\Files\Students\Notes"
 DEFAULT_RECORD_DURATION = 30  # Fallback duration if needed (seconds)
 SAMPLE_RATE = 16000  # Sample rate for audio capture
 SAMPLE_WIDTH = 2  # 16-bit audio
 
 # Create output directory if it doesn't exist
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-
 
 
 from pydub import AudioSegment

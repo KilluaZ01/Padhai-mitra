@@ -1,9 +1,10 @@
-openai-whisper 
 pyaudio 
 numpy 
 soundfile 
-langdetect
-librosa
 speechrecognition
 pydub
 keyboard
+opencv-python
+face_recognition
+gTTS
+pillow
