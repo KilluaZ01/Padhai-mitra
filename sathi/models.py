@@ -1,6 +1,7 @@
-# models.py
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+import os
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, name, password=None, user_type=None):
@@ -22,6 +23,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     USER_TYPES = (
         ('teacher', 'Teacher'),
@@ -41,3 +43,47 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+# Profile Model for Student with Profile Picture
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    
+    def __str__(self):
+        return f'{self.user.name} Profile'
+
+    # Override delete to delete the profile picture file when Profile is deleted
+    def delete(self, *args, **kwargs):
+        if self.profile_picture:
+            if os.path.isfile(self.profile_picture.path):
+                os.remove(self.profile_picture.path)
+        super().delete(*args, **kwargs)
+
+
+# Notes Model
+class Note(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
+    file = models.FileField(upload_to='notes/')
+    
+    def __str__(self):
+        return f'{self.title} - {self.user.email}'
+
+    # Override delete to remove the note file when Note is deleted
+    def delete(self, *args, **kwargs):
+        if self.file:
+            if os.path.isfile(self.file.path):
+                os.remove(self.file.path)
+        super().delete(*args, **kwargs)
+
+
+# Question Model
+class Question(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    question = models.TextField()
+    
+    def __str__(self):
+        return f'Question by {self.name}'
