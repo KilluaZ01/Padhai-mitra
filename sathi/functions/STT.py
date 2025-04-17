@@ -90,12 +90,20 @@ def transcribe_microphone():
         audio_thread.daemon = True
         audio_thread.start()
         
+<<<<<<< HEAD
         # Wait for first space bar press to start
+=======
+        # # Wait for first space bar press to start
+>>>>>>> 71c5765d22c00796e85f4280613cfdda96354907
         # keyboard.wait('space')
         # print("Recording started. Press space bar again to stop.")
         # recording = True
         
+<<<<<<< HEAD
         # Wait for second space bar press to stop
+=======
+        # # Wait for second space bar press to stop
+>>>>>>> 71c5765d22c00796e85f4280613cfdda96354907
         # keyboard.wait('space')
         # recording = False
         # stop_event.set()
@@ -111,12 +119,12 @@ def transcribe_microphone():
             return "", "unknown"
         
         # Convert raw audio to WAV format
-        wav_file = os.path.join(OUTPUT_DIR, f"mic_recording_{uuid.uuid4().hex}.wav")
-        with open(wav_file, "wb") as f:
-            # Create WAV header
-            wav = sr.AudioData(audio_data, SAMPLE_RATE, SAMPLE_WIDTH)
-            f.write(wav.get_wav_data())
-        print(f"Saved microphone audio to {wav_file}")
+        # wav_file = os.path.join(OUTPUT_DIR, f"mic_recording_{uuid.uuid4().hex}.wav")
+        # with open(wav_file, "wb") as f:
+        #     # Create WAV header
+        #     wav = sr.AudioData(audio_data, SAMPLE_RATE, SAMPLE_WIDTH)
+        #     f.write(wav.get_wav_data())
+        # print(f"Saved microphone audio to {wav_file}")
         
         # Transcribe the WAV file
         text, language = transcribe_audio_file(wav_file)
@@ -134,13 +142,13 @@ def transcribe_microphone():
         stop_event.set()
         # Note: WAV file is retained as per original requirement
 
-def save_transcription(text, language, output_file):
-    """Save transcribed text to a file with timestamp and language."""
-    timestamp = time.strftime("%Y%m%d_%H%M%S")
-    try:
-        with open(output_file, "a", encoding="utf-8") as f:
-            f.write(f"{text}\n\n")
-        print(f"Transcription saved to {output_file}")
-    except Exception as e:
-        print(f"Error saving transcription: {e}")
+# def save_transcription(text, language, output_file):
+#     """Save transcribed text to a file with timestamp and language."""
+#     timestamp = time.strftime("%Y%m%d_%H%M%S")
+#     try:
+#         with open(output_file, "a", encoding="utf-8") as f:
+#             f.write(f"{text}\n\n")
+#         print(f"Transcription saved to {output_file}")
+#     except Exception as e:
+#         print(f"Error saving transcription: {e}")
 

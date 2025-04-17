@@ -17,9 +17,7 @@
       crossorigin="anonymous"
     ></script>
   </head>
-  <body
-    class="min-h-screen flex items-center justify-center bg-[#003366] py-12 px-4 sm:px-6 lg:px-8"
-  >
+  <body class="min-h-screen flex items-center justify-center bg-[#003366] py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-4 flex flex-col items-center">
       <!-- Visible Back Button -->
       <div class="w-full flex justify-start">
@@ -46,11 +44,7 @@
       <h2 class="text-center text-2xl font-bold text-white">Welcome Back</h2>
 
       <!-- Sign In Form -->
-      <form
-        method="POST"
-        action="{% url 'login_student' %}"
-        class="space-y-4 w-full"
-      >
+      <form method="POST" action="{% url 'login_student' %}" class="space-y-4 w-full">
         {% csrf_token %}
 
         <!-- Email -->
@@ -75,11 +69,16 @@
 
         <!-- Password -->
         <div>
+<<<<<<< HEAD
           <label
             for="password"
             class="block mb-2 text-sm font-medium text-white"
           >
             Enter Password
+=======
+          <label for="password" class="block mb-2 text-sm font-medium text-white">
+            Password
+>>>>>>> 71c5765d22c00796e85f4280613cfdda96354907
           </label>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -103,16 +102,24 @@
         >
           Press to Login
         </button>
-        <!-- Add this block just above the form tag -->
+
+        <!-- Error Messages -->
         {% if messages %}
-        <div class="w-full text-center">
-          {% for message in messages %}
-          <p class="text-red-500 text-sm mb-2">{{ message }}</p>
-          {% endfor %}
-        </div>
+          <div class="w-full text-center">
+            {% for message in messages %}
+              <p class="text-red-500 text-sm mb-2">{{ message }}</p>
+            {% endfor %}
+          </div>
         {% endif %}
       </form>
+
+      <!-- Video Section -->
+      <div class="mt-6">
+        <h3 class="text-white">Camera Access</h3>
+        <video id="video" width="300" height="200" autoplay></video>
+      </div>
     </div>
+<<<<<<< HEAD
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const synth = window.speechSynthesis;
@@ -171,6 +178,51 @@
           el.addEventListener("mouseleave", () => synth.cancel());
         });
       });
+=======
+
+    <script>
+      const videoElement = document.getElementById('video');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+    
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+          videoElement.srcObject = stream;
+    
+          setInterval(() => {
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+    
+            // Draw the current video frame onto the canvas
+            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+    
+            const imageData = canvas.toDataURL('image/jpeg');
+    
+            saveImageToServer(imageData);
+          }, 10000);
+        })
+        .catch((error) => {
+          console.error('Error accessing the camera: ', error);
+        });
+    
+      function saveImageToServer(imageData) {
+        fetch('{% url "save_image" %}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+          },
+          body: JSON.stringify({ image: imageData }),
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Image saved:', data);
+          })
+          .catch(error => {
+            console.error('Error saving image:', error);
+          });
+      }
+>>>>>>> 71c5765d22c00796e85f4280613cfdda96354907
     </script>
     
   </body>
