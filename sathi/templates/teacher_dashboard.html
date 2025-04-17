@@ -81,17 +81,6 @@
           </nav>
         </div>
         <div class="p-4">
-<<<<<<< HEAD
-          <form action="{% url 'Landing' %}" method="post">
-            {% csrf_token %}
-            <button
-              type="submit"
-              class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-            >
-              Log Out
-            </button>
-          </form>
-=======
           <a
             href="{% url 'logout' %}"
             class="flex items-center text-red-600 hover:text-red-800"
@@ -99,7 +88,6 @@
             <i class="fas fa-sign-out-alt"></i>
             <span class="ml-2">Logout</span>
           </a>
->>>>>>> 71c5765d22c00796e85f4280613cfdda96354907
         </div>
       </aside>
 
